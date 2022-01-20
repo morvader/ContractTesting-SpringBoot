@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+
+    tools {
+        maven "maven"
+        jdk "openjdk11"
+    }
+
+    environment {
+        //Use Pipeline Utility Steps plugin to read information from pom.xml into env variables
+        IMAGE = readMavenPom().getArtifactId()
+        VERSION = readMavenPom().getVersion()
+    }
+
+    stages {
+        stage('Download code') {
+            steps {
+                git branch: 'demo-with-messages', credentialsId: '94fdc48a-28d3-4429-aa38-051a0ac8dac0', url: 'https://gitlab.sngular.com/alejandro.pena/freddie-mac-pact-jvm-demo.git'
+            }
+        }
+        stage('Verify Pacts') {
+            steps {
+                sh "mvn clean verify -Dpact.showStacktrace=true -Dpact.verifier.publishResults=true -Dpact.provider.version=${VERSION} -pl Provider"
+            }
+        }
+    }
+}

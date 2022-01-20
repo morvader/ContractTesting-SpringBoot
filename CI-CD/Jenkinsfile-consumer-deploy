@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+
+    parameters{
+        text(defaultValue: "student-consumer-rest\nstudent-consumer-message", description: "Include one pacticipant per line", name: "pacticipants")
+    }
+
+    stages {
+        stage('Can-I-Deploy Consumer') {
+            steps {
+                dir('/pact/bin') {
+                    script {
+                        def script = "./pact-broker can-i-deploy "
+                        def pacticipantsList = "${params.pacticipants}".split('\n');
+                        for (int i = 0; i <pacticipantsList.size(); i++){
+                            script = script + "--pacticipant ${pacticipantsList[i]} --latest "
+                        }
+                        script = script + "--broker-base-url http://pactbroker:9292 --broker-username pact_workshop --broker-password pact_workshop"
+                        sh "${script}"
+                    }
+                }
+            }
+        }
+    }
+}
