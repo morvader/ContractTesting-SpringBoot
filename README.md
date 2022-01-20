@@ -31,6 +31,8 @@ mvn pact:publish -pl Consumer
 
 To verify pacts without publishing results
 
+*Remember that the provider must be up and running before making this verification*
+
 ```bash
 mvn verify -pl Provider
 ```
