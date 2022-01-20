@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class StudentService {
 
-    private static final String BASE_URI_STUDENTS = "/students/";
+    private static final String BASE_URI_STUDENTS = "http://localhost:8082/student/";
 
     private final RestTemplate restTemplate;
 
